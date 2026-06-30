@@ -1,0 +1,37 @@
+{
+  "name": "teste-api-keegoo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "cypress open",
+    "test:all": "cypress run",
+    "test:api": "cypress run --env tipo=api",
+    "test:web": "cypress run --env tipo=web --browser chrome"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ValdeciMacedo/Teste-API-Keegoo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ValdeciMacedo/Teste-API-Keegoo/issues"
+  },
+  "homepage": "https://github.com/ValdeciMacedo/Teste-API-Keegoo#readme",
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^25.0.0",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
+    "cypress": "^15.17.0",
+    "esbuild": "^0.28.1",
+    "tslib": "^2.8.1"
+  },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": [
+      "cypress/step_definitions/**/*.js"
+    ]
+  }
+}

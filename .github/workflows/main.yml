@@ -1,0 +1,53 @@
+name: CI/CD Pipeline - Keegoo Automation
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test-automation:
+    name: Run Cypress Tests (API & Web)
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o código do seu repositório para a máquina virtual do GitHub
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configura o ambiente Node.js na máquina
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18 # Versão recomendada para o Cypress atual
+          cache: 'npm'
+
+      # 3. Instala as dependências de forma limpa baseando-se no package-lock.json
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Executa primeiro os testes de API (Fast Feedback)
+      - name: Run API Tests
+        uses: cypress-io/github-action@v6
+        with:
+          install: false # Dependências já foram instaladas no passo anterior
+          spec: cypress/features/api/*.feature
+          
+      # 5. Executa os testes de Interface Web usando o Chrome Headless
+      - name: Run Web Tests
+        if: always() # Garante que os testes web rodam mesmo se a API falhar
+        uses: cypress-io/github-action@v6
+        with:
+          install: false
+          browser: chrome
+          spec: cypress/features/web/*.feature
+
+      # 6. Salva os relatórios gerados na pasta para você poder baixar depois se algo falhar
+      - name: Upload Test Reports
+        if: always() # Sempre executa para guardar as evidências
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-execution-reports
+          path: cypress/reports/
+          retention-days: 7
